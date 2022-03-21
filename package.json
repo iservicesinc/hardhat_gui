@@ -1,0 +1,26 @@
+{
+  "name": "hardhat_gui",
+  "version": "1.0.0",
+  "description": "Frontend gui for hardhat project.",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "start": "parcel -p 3001 src/index.html",
+    "build": "parcel build src/index.html",
+    "clean": "rm -rf dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://"
+  },
+  "author": "@jgrobstein",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.3.2",
+    "@types/uikit": "^3.3.2",
+    "ethers": "^5.6.1",
+    "parcel": "^2.3.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "uikit": "^3.12.2"
+  }
+}

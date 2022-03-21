@@ -1,0 +1,43 @@
+// 1. Your custom variables and variable overwrites.
+//
+// Colors
+//
+
+$global-color: #dee6e8;
+$global-emphasis-color: #ffffff;
+$global-muted-color: #6e6e74;
+
+$global-link-color: #3268cc;
+$global-link-hover-color: #4c85be;
+
+$global-border: #3c3c3f;
+
+//
+// Backgrounds
+//
+
+$global-background: #2b2b30;
+
+$global-muted-background: #3c3c3f;
+$global-primary-background: #425785;
+$global-secondary-background: #414141;
+
+$global-success-background: #36a330;
+$global-warning-background: #caad4b;
+$global-danger-background: #bd3838;
+
+//
+// Fonts
+//
+$base-heading-font-family: 'Saira Stencil One', sans-serif;
+
+// 2. Import default variables and available mixins.
+@import "uikit/src/scss/variables-theme.scss";
+@import "uikit/src/scss/mixins-theme.scss";
+@import url('https://fonts.googleapis.com/css2?family=Saira+Stencil+One&display=swap');
+
+// 3. Your custom mixin overwrites.
+@mixin hook-button() { border-radius: 6px; }
+
+// 4. Import UIkit.
+@import "uikit/src/scss/uikit-theme.scss";
