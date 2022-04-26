@@ -4,6 +4,7 @@ import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
 import NoWallet from './components/NoWallet';
 import Application from './components/Application';
+import QRCode from 'qrcode';
 
 UIkit.use(Icons);
 
@@ -13,6 +14,7 @@ function App() {
     const [userAddress, setUserAddress] = useState(0);
     const [balance, setBalance] = useState(0);
     const [cid, setCid] = useState(null);
+    const [newWallet, setNewWallet] = useState(null);
     
     useEffect(() => {
         window.ethereum.on('chainChanged', () => {
@@ -42,10 +44,69 @@ function App() {
         setCid(CID[network.chainId]);
     }
 
+    async function generateWallet() {
+        const w = [];
+        const wallet = ethers.Wallet.createRandom();
+        // const text = `{"address": "${wallet.address}", "mnemonic": "${wallet.mnemonic.phrase}", "key": "${wallet.privateKey}"}`
+        w["address"] = wallet.address;
+        w["qraddress"] = await qrCode(wallet.address);
+        w["privateKey"] = wallet.privateKey;
+        w["qrprivateKey"] = await qrCode(wallet.privateKey);
+        w["mnemonicPhrase"] = wallet.mnemonic.phrase;
+        w["qrmnemonicPhrase"] = await qrCode(wallet.mnemonic.phrase);
+        setNewWallet(w);
+    }
+
+    async function qrCode(text) {
+        var opts = {
+            errorCorrectionLevel: 'H',
+            quality: 0.3,
+            margin: 1,
+            color: {
+                dark:"#2b2b30ff",
+                light:"#dee6e8ff"
+            }
+        }
+        data = await QRCode.toDataURL(text);
+        return data;
+    }
+
     if (userAddress === 0) {
         return (
-            <>
-                <h2 className='uk-heading-small'>Please connect your wallet.</h2>
+            <div className='uk-container'>
+                <div className='uk-text-center'>
+                    <button className='uk-button uk-button-primary uk-button-large' onClick={generateWallet}>Generate new wallet</button>
+                    {newWallet ? (
+                        <>
+                            <p className='uk-alert uk-alert-danger'>This data is generated on your machine, we do not transmit or store this data in any way. Print or record this data in a secure location.</p>
+                            <div className='uk-child-width-expand@s uk-text-center' uk-grid='true'>
+                                <div>
+                                    <div className="uk-panel uk-padding">
+                                        <h3>Public Address</h3>
+                                        <img data-src={newWallet["qraddress"]} alt="public address" uk-img='true'/>
+                                        <p className='uk-text-small uk-text-justify uk-text-break'>{newWallet["address"]}</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="uk-panel uk-padding">
+                                        <h3>Private Key</h3>
+                                        <img data-src={newWallet["qrprivateKey"]} alt="private key" uk-img='true' />
+                                        <p className='uk-text-small uk-text-justify uk-text-break'>{newWallet["privateKey"]}</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="uk-panel uk-padding">
+                                        <h3>Mnemonic Phrase</h3>
+                                        <img data-src={newWallet["qrmnemonicPhrase"]} alt="mnemonic phrase" uk-img='true' />
+                                        <p className='uk-text-break'>{newWallet["mnemonicPhrase"]}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    ) : ('')}
+                    <ul id='newWallet' className='uk-list uk-text-justify'></ul>
+                </div>
+                <p className='uk-text-lead'>Connect your wallet to continue.</p>
                 <button
                 className='uk-button uk-button-danger uk-button-large'
                 type='button'
@@ -53,7 +114,7 @@ function App() {
                 >
                 Connect Wallet
                 </button>
-            </>
+            </div>
         );
     }
 
